@@ -1,0 +1,7 @@
+openai-whisper
+requests
+PyYAML
+schedule
+sounddevice
+numpy
+flask

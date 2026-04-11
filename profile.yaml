@@ -1,0 +1,14 @@
+# User profile — who Rosie is caring for
+user:
+  name: "Lynne"
+  nickname: "Lynne"
+  gender: "female"
+  pronouns: "she/her"
+  age:
+  hobbies: ["puzzles"]
+  health_notes: ""
+  favorites:
+    food: ""
+    show: ""
+    music: ""
+  notes: ""

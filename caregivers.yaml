@@ -1,0 +1,7 @@
+# Caregiver profiles
+caregivers:
+  - name: "Val"
+    relationship: "spouse"
+    gender: "male"
+    pronouns: "he/him"
+    notes: "Primary caregiver, lives in the same house as Lynne"
