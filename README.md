@@ -59,23 +59,40 @@ rosie/
 ### Prerequisites
 
 - Python 3.10+
-- [Ollama](https://ollama.com/) installed with a model pulled (`ollama pull qwen2.5:3b`)
+- [Ollama](https://ollama.com/) installed with a model pulled (`ollama pull gemma2:9b`)
 - A working microphone and speaker
+- [ffmpeg](https://ffmpeg.org/) installed (required by Whisper)
+  - Windows: `winget install ffmpeg`
+  - Linux: `sudo apt install ffmpeg`
+  - Mac: `brew install ffmpeg`
 
 ### Install
 
 ```bash
-git clone <repo-url> && cd rosie
+git clone https://github.com/spencer-ok/ai-assistant.git
+cd ai-assistant
 python -m venv winvenv
-winvenv\Scripts\pip install -r requirements.txt
+winvenv\Scripts\activate        # Windows
+# source winvenv/bin/activate   # Linux/Mac
+pip install -r requirements.txt
 ```
 
 Download a Piper voice model:
 ```bash
 mkdir models
+cd models
 curl -L -O "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx"
 curl -L -O "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx.json"
+cd ..
 ```
+
+### Find Audio Devices
+
+```bash
+python -c "import sounddevice; print(sounddevice.query_devices())"
+```
+
+Note the device IDs for your microphone (input) and speakers (output), then update `config.yaml`.
 
 ### Configure
 

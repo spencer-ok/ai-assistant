@@ -1,4 +1,5 @@
 openai-whisper
+piper-tts
 requests
 PyYAML
 schedule
