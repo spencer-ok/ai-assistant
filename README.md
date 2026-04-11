@@ -225,6 +225,18 @@ On the remote machine:
 - [ ] **Photo frame mode** — Background slideshow from shared cloud folder
 - [ ] **Video calls** — One-click family calling via Jitsi Meet
 
+## Source Control
+
+Repository: [github.com/spencer-ok/ai-assistant](https://github.com/spencer-ok/ai-assistant)
+
+```bash
+# Push changes (PAT token already configured in git remote)
+cd C:\apps\ai-assistant
+git add -A
+git commit -m "description of changes"
+git push
+```
+
 ## License
 
 MIT
