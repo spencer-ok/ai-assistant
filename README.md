@@ -137,6 +137,42 @@ Open `http://localhost:5000` for the web UI.
 - **Caregiver Notes panel** — leave text or voice notes for the user
 - **Theme support** — `?theme=default` or `?theme=robot`
 
+## Activities
+
+Rosie can do interactive activities with the user. Just say the trigger word to start.
+
+| Activity | Trigger Words | Description |
+|---|---|---|
+| **Trivia** | "trivia", "quiz me" | Multi-category trivia with hints and scoring |
+| **Stories** | "tell me a story" | Full-length stories told naturally |
+| **Jokes** | "tell me a joke" | Clean, family-friendly jokes |
+| **Reminiscing** | "remember when" | Talk about memories and the past |
+| **Word Games** | "word game" | Simple guessing games |
+
+### Trivia System
+
+Trivia uses a layered selection flow:
+1. User says "let's do trivia"
+2. Rosie offers categories (TV Shows, General Knowledge)
+3. User picks a category → Rosie offers specific topics
+4. User picks a topic → questions load from a YAML file
+5. Questions are shuffled and asked one at a time with hints
+
+Adding new trivia topics is easy — just drop a YAML file in `activities/trivia/`:
+
+```yaml
+topic: "My Topic"
+instructions: >
+  Quiz instructions for the LLM...
+questions:
+  - q: "Question text"
+    a: "Answer"
+    hint: "Hint text"
+    difficulty: easy
+```
+
+Then register it in `activities/activities.yaml` under the appropriate category.
+
 ## Caregiver Notes
 
 Family members can leave notes through the web UI. Notes are:
