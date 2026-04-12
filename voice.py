@@ -304,9 +304,9 @@ def _tts_cleanup(text: str) -> str:
             h -= 12
             ampm = " PM"
         return f"{h}:{mins}{ampm}" if mins != "00" else f"{h}{ampm}"
-    text = _re.sub(r'(?<![,\d])(\d{1,2})((?:00|15|30|45))(?![,\d])', _fix_time, text)
+    text = _re.sub(r'(?<![,\d])([12]?\d)((?:00|15|30|45))(?![,\d])', lambda m: _fix_time(m) if 1 <= int(m.group(1)) <= 24 else m.group(0), text)
     # Also handle "11.30" format
-    text = _re.sub(r'(?<![,\d])(\d{1,2})\.(00|15|30|45)(?![,\d])', _fix_time, text)
+    text = _re.sub(r'(?<![,\d])([12]?\d)\.(00|15|30|45)(?![,\d])', lambda m: _fix_time(m) if 1 <= int(m.group(1)) <= 24 else m.group(0), text)
     return text
 
 

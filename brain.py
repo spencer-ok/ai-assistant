@@ -151,7 +151,7 @@ def _stream_together(messages):
             data = json.loads(data_str)
         except json.JSONDecodeError:
             continue
-        token = data.get("choices", [{}])[0].get("delta", {}).get("content", "")
+        token = (data.get("choices") or [{}])[0].get("delta", {}).get("content", "")
         if token:
             yield token
 

@@ -46,6 +46,8 @@ def check_trigger(user_text: str) -> str | None:
 
 def _show_menu() -> str:
     global _active
+    if len(_activities) == 1:
+        return _select_activity(_activities[0])
     names = [a["name"] for a in _activities]
     _active = {"selecting": "activity"}
     listing = ", ".join(names[:-1]) + ", or " + names[-1]

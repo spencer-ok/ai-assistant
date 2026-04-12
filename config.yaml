@@ -68,4 +68,4 @@ ollama:
 
 together:
   enabled: true
-  model: "meta-llama/Llama-3.3-70B-Instruct-Turbo"
+  model: "Qwen/Qwen2.5-7B-Instruct-Turbo"
