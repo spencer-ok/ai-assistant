@@ -8,6 +8,7 @@ venv/
 # Runtime
 rosie.log
 memory.json
+.env
 
 # Models (large binary files)
 models/

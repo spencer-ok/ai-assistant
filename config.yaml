@@ -65,3 +65,7 @@ ollama:
   host: "http://192.168.68.115:11434"
   fallback_host: "http://localhost:11434"
   fallback_model: "qwen2.5:3b"
+
+together:
+  enabled: true
+  model: "meta-llama/Llama-3.3-70B-Instruct-Turbo"

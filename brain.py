@@ -1,6 +1,7 @@
-"""LLM interaction via Ollama with streaming and persistent memory."""
+"""LLM interaction via Ollama/Together AI with streaming and persistent memory."""
 
 import json
+import os
 import re
 from datetime import datetime
 
@@ -17,6 +18,19 @@ _OLLAMA_FALLBACK = _cfg["ollama"].get("fallback_host", None)
 _OLLAMA_URL = _OLLAMA_HOST + "/api/chat"
 _MODEL = _cfg["persona"]["model"]
 _FALLBACK_MODEL = _cfg["ollama"].get("fallback_model", _MODEL)
+
+# Together AI (cloud)
+_TOGETHER_KEY = os.environ.get("TOGETHER_API_KEY", "")
+if not _TOGETHER_KEY:
+    _env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    if os.path.exists(_env_path):
+        for line in open(_env_path):
+            if line.startswith("TOGETHER_API_KEY="):
+                _TOGETHER_KEY = line.split("=", 1)[1].strip()
+
+_TOGETHER_MODEL = _cfg.get("together", {}).get("model", "meta-llama/Llama-3.3-70B-Instruct-Turbo")
+_TOGETHER_URL = "https://api.together.ai/v1/chat/completions"
+_USE_TOGETHER = _cfg.get("together", {}).get("enabled", False) and bool(_TOGETHER_KEY)
 _SYSTEM_PROMPT = _cfg["persona"]["system_prompt"]
 _history: list[dict] = []
 
@@ -116,43 +130,41 @@ def ask(user_message: str, initiated_by: str = "user") -> str:
     return "".join(chunk for chunk in ask_streaming(user_message, initiated_by))
 
 
-def ask_streaming(user_message: str, initiated_by: str = "user"):
-    """Stream LLM response, yielding complete sentences as they arrive."""
-    if initiated_by == "system":
-        _history.append({"role": "user", "content": f"[You decided to say this to the user: {user_message}]"})
-    else:
-        _history.append({"role": "user", "content": user_message})
+def _stream_together(messages):
+    """Stream from Together AI (OpenAI-compatible API)."""
+    resp = requests.post(_TOGETHER_URL, json={
+        "model": _TOGETHER_MODEL,
+        "stream": True,
+        "messages": messages,
+    }, headers={"Authorization": f"Bearer {_TOGETHER_KEY}"}, stream=True, timeout=120)
+    resp.raise_for_status()
+    for line in resp.iter_lines():
+        if not line:
+            continue
+        line = line.decode("utf-8") if isinstance(line, bytes) else line
+        if not line.startswith("data: "):
+            continue
+        data_str = line[6:]
+        if data_str.strip() == "[DONE]":
+            break
+        try:
+            data = json.loads(data_str)
+        except json.JSONDecodeError:
+            continue
+        token = data.get("choices", [{}])[0].get("delta", {}).get("content", "")
+        if token:
+            yield token
 
-    trimmed = _history[-20:]
 
-    url = _OLLAMA_URL
-    model = _MODEL
-    try:
-        resp = requests.post(url, json={
-            "model": model,
-            "stream": True,
-            "messages": [{"role": "system", "content": _build_system_prompt()}] + trimmed,
-        }, stream=True, timeout=120)
-        resp.raise_for_status()
-    except Exception:
-        if _OLLAMA_FALLBACK:
-            print(f"[LLM] Primary failed, falling back to {_OLLAMA_FALLBACK}")
-            url = _OLLAMA_FALLBACK + "/api/chat"
-            model = _FALLBACK_MODEL
-            resp = requests.post(url, json={
-                "model": model,
-                "stream": True,
-                "messages": [{"role": "system", "content": _build_system_prompt()}] + trimmed,
-            }, stream=True, timeout=120)
-            resp.raise_for_status()
-        else:
-            raise
-
-    buffer = ""
-    full_reply = ""
-
-    try:
-      for line in resp.iter_lines():
+def _stream_ollama(messages, url, model):
+    """Stream from Ollama API."""
+    resp = requests.post(url, json={
+        "model": model,
+        "stream": True,
+        "messages": messages,
+    }, stream=True, timeout=120)
+    resp.raise_for_status()
+    for line in resp.iter_lines():
         if not line:
             continue
         try:
@@ -162,8 +174,49 @@ def ask_streaming(user_message: str, initiated_by: str = "user"):
         if data.get("done"):
             break
         token = data.get("message", {}).get("content", "")
-        buffer += token
+        if token:
+            yield token
 
+
+def ask_streaming(user_message: str, initiated_by: str = "user"):
+    """Stream LLM response, yielding complete sentences as they arrive."""
+    if initiated_by == "system":
+        _history.append({"role": "user", "content": f"[You decided to say this to the user: {user_message}]"})
+    else:
+        _history.append({"role": "user", "content": user_message})
+
+    trimmed = _history[-20:]
+    messages = [{"role": "system", "content": _build_system_prompt()}] + trimmed
+
+    # Try providers in order: Together AI → Ollama primary → Ollama fallback
+    token_stream = None
+    for attempt in ["together", "ollama", "fallback"]:
+        try:
+            if attempt == "together" and _USE_TOGETHER:
+                token_stream = _stream_together(messages)
+            elif attempt == "ollama":
+                token_stream = _stream_ollama(messages, _OLLAMA_URL, _MODEL)
+            elif attempt == "fallback" and _OLLAMA_FALLBACK:
+                print(f"[LLM] Falling back to {_OLLAMA_FALLBACK}")
+                token_stream = _stream_ollama(messages, _OLLAMA_FALLBACK + "/api/chat", _FALLBACK_MODEL)
+            else:
+                continue
+            # Test the stream by getting first token
+            break
+        except Exception as e:
+            print(f"[LLM] {attempt} failed: {e}")
+            token_stream = None
+
+    if token_stream is None:
+        yield "I'm having trouble thinking right now. Can you try again?"
+        return
+
+    buffer = ""
+    full_reply = ""
+
+    try:
+      for token in token_stream:
+        buffer += token
         while True:
             match = _SENTENCE_END.search(buffer)
             if not match:
