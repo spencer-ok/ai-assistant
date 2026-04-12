@@ -10,7 +10,7 @@ with open(os.path.join(_DIR, "activities.yaml")) as f:
     _cfg = yaml.safe_load(f)
 
 _TRIGGERS = _cfg["triggers"]
-_activities = _cfg["activities"]
+_activities = [a for a in _cfg["activities"] if a.get("enabled", True)]
 
 # Current activity state
 _active = None

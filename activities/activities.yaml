@@ -13,6 +13,7 @@ triggers:
 # All available activities
 activities:
   - name: "Trivia"
+    enabled: true
     trigger: ["trivia", "quiz", "quiz me"]
     categories:
       - name: "TV Shows"
@@ -35,6 +36,7 @@ activities:
             file: "trivia/history.yaml"
 
   - name: "Word Games"
+    enabled: false
     trigger: ["word game", "word games", "guessing game", "guess"]
     categories:
       - name: "Animal Guessing"
@@ -45,10 +47,13 @@ activities:
         file: "word_games/what_am_i.yaml"
 
   - name: "Stories"
+    enabled: false
     trigger: ["story", "stories", "tell me a story"]
 
   - name: "Jokes"
+    enabled: false
     trigger: ["joke", "jokes", "funny"]
 
   - name: "Reminiscing"
+    enabled: false
     trigger: ["reminisce", "remember when", "old days", "memories"]
