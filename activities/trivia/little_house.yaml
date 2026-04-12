@@ -1,0 +1,68 @@
+# Little House on the Prairie Trivia
+topic: "Little House on the Prairie"
+instructions: >
+  You are quizzing the user on Little House on the Prairie trivia.
+  Ask ONE question at a time. Wait for their answer.
+  If correct, celebrate briefly. If wrong, give a hint.
+  Keep it fun and encouraging.
+
+questions:
+  - q: "What is the name of the main character and narrator of the show?"
+    a: "Laura Ingalls (later Laura Ingalls Wilder)"
+    hint: "Her first name starts with L"
+    difficulty: easy
+
+  - q: "What is the name of the small town where the Ingalls family lives?"
+    a: "Walnut Grove"
+    hint: "It's named after a type of tree"
+    difficulty: easy
+
+  - q: "What is the name of Laura's father?"
+    a: "Charles Ingalls (Pa)"
+    hint: "Everyone calls him 'Pa'"
+    difficulty: easy
+
+  - q: "What is the name of Laura's older sister who goes blind?"
+    a: "Mary Ingalls"
+    hint: "A very common girl's name starting with M"
+    difficulty: easy
+
+  - q: "Who plays Charles Ingalls in the TV show?"
+    a: "Michael Landon"
+    hint: "He also starred in Bonanza and Highway to Heaven"
+    difficulty: medium
+
+  - q: "What is the name of the mean girl who bullies Laura at school?"
+    a: "Nellie Oleson"
+    hint: "Her family owns the mercantile store"
+    difficulty: easy
+
+  - q: "What is the name of the Ingalls family dog?"
+    a: "Jack"
+    hint: "A very common short boy's name"
+    difficulty: medium
+
+  - q: "What does Charles Ingalls do for a living?"
+    a: "He is a farmer (and does various jobs like working at a mill)"
+    hint: "He works the land"
+    difficulty: easy
+
+  - q: "What is the name of Laura's baby sister who dies?"
+    a: "Grace (in the books) / Charles Jr. in the show"
+    hint: "This is a sad episode in the series"
+    difficulty: hard
+
+  - q: "What instrument does Pa play in the evenings?"
+    a: "The fiddle (violin)"
+    hint: "It's a stringed instrument you play with a bow"
+    difficulty: easy
+
+  - q: "What is the name of the town doctor?"
+    a: "Dr. Baker"
+    hint: "His last name is also a profession that makes bread"
+    difficulty: medium
+
+  - q: "Who does Laura eventually marry?"
+    a: "Almanzo Wilder"
+    hint: "His first name is unusual and starts with A"
+    difficulty: medium

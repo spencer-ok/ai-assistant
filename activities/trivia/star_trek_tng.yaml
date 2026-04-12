@@ -1,0 +1,84 @@
+# Star Trek: The Next Generation Trivia
+topic: "Star Trek: The Next Generation"
+instructions: >
+  You are quizzing the user on Star Trek: The Next Generation trivia.
+  Ask ONE question at a time from the list below. Wait for their answer.
+  If correct, celebrate briefly and move to the next question.
+  If wrong, give a hint. If still wrong, reveal the answer kindly.
+  Keep it fun and encouraging. Mix up the difficulty.
+
+questions:
+  - q: "What is the name of the starship Captain Picard commands?"
+    a: "USS Enterprise-D (NCC-1701-D)"
+    hint: "It starts with 'Enterprise'"
+    difficulty: easy
+
+  - q: "What is Captain Picard's favorite drink?"
+    a: "Tea, Earl Grey, hot"
+    hint: "It's a hot beverage from England"
+    difficulty: easy
+
+  - q: "What is the name of the android crew member?"
+    a: "Data"
+    hint: "His name is a word that means 'information'"
+    difficulty: easy
+
+  - q: "Who is the chief medical officer on the Enterprise-D?"
+    a: "Dr. Beverly Crusher"
+    hint: "Her last name sounds like something you do to a can"
+    difficulty: easy
+
+  - q: "What species is Worf?"
+    a: "Klingon"
+    hint: "They are a warrior race with ridged foreheads"
+    difficulty: easy
+
+  - q: "What is the name of Counselor Troi's home planet?"
+    a: "Betazed"
+    hint: "It starts with 'Beta'"
+    difficulty: medium
+
+  - q: "What is the holodeck?"
+    a: "A room that creates realistic simulations using holograms"
+    hint: "It's a special room on the ship for recreation"
+    difficulty: easy
+
+  - q: "Who is Data's evil twin brother?"
+    a: "Lore"
+    hint: "His name means 'knowledge passed down through stories'"
+    difficulty: medium
+
+  - q: "What does the Borg say when they encounter a new species?"
+    a: "Resistance is futile"
+    hint: "It starts with 'Resistance...'"
+    difficulty: easy
+
+  - q: "What is Commander Riker's first name?"
+    a: "William (Will)"
+    hint: "It's a very common English name starting with W"
+    difficulty: easy
+
+  - q: "What is the name of the bartender in Ten Forward?"
+    a: "Guinan"
+    hint: "She is played by Whoopi Goldberg"
+    difficulty: medium
+
+  - q: "What card game does the crew often play together?"
+    a: "Poker"
+    hint: "It's a popular card game with chips and bluffing"
+    difficulty: easy
+
+  - q: "What is the name of Worf's son?"
+    a: "Alexander"
+    hint: "He shares a name with a famous ancient Greek conqueror"
+    difficulty: medium
+
+  - q: "What does Captain Picard say to engage the ship?"
+    a: "Make it so"
+    hint: "Three words — 'Make it...'"
+    difficulty: easy
+
+  - q: "What is the Prime Directive?"
+    a: "A rule that forbids Starfleet from interfering with other civilizations"
+    hint: "It's the most important rule in Starfleet"
+    difficulty: medium

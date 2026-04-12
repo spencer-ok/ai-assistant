@@ -1,0 +1,68 @@
+# Animal Trivia
+topic: "Animals"
+instructions: >
+  You are quizzing the user on fun animal facts.
+  Ask ONE question at a time. Wait for their answer.
+  If correct, celebrate and share a bonus fun fact.
+  If wrong, give a hint. Keep it lighthearted.
+
+questions:
+  - q: "What is the largest animal on Earth?"
+    a: "The blue whale"
+    hint: "It lives in the ocean"
+    difficulty: easy
+
+  - q: "How many legs does a spider have?"
+    a: "Eight"
+    hint: "More than six, less than ten"
+    difficulty: easy
+
+  - q: "What animal is known as man's best friend?"
+    a: "Dog"
+    hint: "It barks and wags its tail"
+    difficulty: easy
+
+  - q: "What is a baby kangaroo called?"
+    a: "A joey"
+    hint: "It's also a common boy's name"
+    difficulty: medium
+
+  - q: "Which bird can fly backwards?"
+    a: "Hummingbird"
+    hint: "It's a very small bird that hovers near flowers"
+    difficulty: medium
+
+  - q: "How many hearts does an octopus have?"
+    a: "Three"
+    hint: "More than one but less than five"
+    difficulty: medium
+
+  - q: "What is the fastest land animal?"
+    a: "Cheetah"
+    hint: "It's a big spotted cat from Africa"
+    difficulty: easy
+
+  - q: "What animal has black and white stripes?"
+    a: "Zebra"
+    hint: "It looks like a horse wearing pajamas"
+    difficulty: easy
+
+  - q: "What do you call a group of lions?"
+    a: "A pride"
+    hint: "It's also a feeling of satisfaction"
+    difficulty: medium
+
+  - q: "Which animal sleeps standing up?"
+    a: "Horse"
+    hint: "You can ride this animal"
+    difficulty: easy
+
+  - q: "What is the only mammal that can truly fly?"
+    a: "Bat"
+    hint: "It comes out at night and uses echolocation"
+    difficulty: medium
+
+  - q: "How long can an elephant live?"
+    a: "60 to 70 years"
+    hint: "About as long as a human"
+    difficulty: hard

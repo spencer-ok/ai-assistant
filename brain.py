@@ -75,6 +75,16 @@ def _build_system_prompt() -> str:
             parts.append(cg)
     except ImportError:
         pass
+
+    # Activity context
+    try:
+        from activities import get_activity_context
+        act = get_activity_context()
+        if act:
+            parts.append(act)
+    except ImportError:
+        pass
+
     return "\n\n".join(parts)
 
 

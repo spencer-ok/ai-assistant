@@ -1,0 +1,40 @@
+# Available activities Rosie can do with the user
+activities:
+  - name: "Trivia"
+    trigger: ["trivia", "quiz", "quiz me"]
+    description: "Fun trivia questions on different topics"
+    categories:
+      - name: "TV Shows"
+        trigger: ["tv", "tv shows", "television"]
+        topics:
+          - name: "Star Trek: The Next Generation"
+            trigger: ["star trek", "next generation", "tng", "picard"]
+            file: "trivia/star_trek_tng.yaml"
+          - name: "Little House on the Prairie"
+            trigger: ["little house", "prairie", "laura ingalls"]
+            file: "trivia/little_house.yaml"
+      - name: "General Knowledge"
+        trigger: ["general", "general knowledge", "random"]
+        topics:
+          - name: "Animals"
+            trigger: ["animals", "animal"]
+            file: "trivia/animals.yaml"
+          - name: "History"
+            trigger: ["history"]
+            file: "trivia/history.yaml"
+
+  - name: "Stories"
+    trigger: ["story", "stories", "tell me a story"]
+    description: "Rosie tells a complete story"
+
+  - name: "Jokes"
+    trigger: ["joke", "jokes", "funny"]
+    description: "Clean, family-friendly jokes"
+
+  - name: "Reminiscing"
+    trigger: ["reminisce", "remember", "old days", "when I was young"]
+    description: "Talk about memories and the past"
+
+  - name: "Word Games"
+    trigger: ["word game", "word games", "guessing game"]
+    description: "Simple word and guessing games"

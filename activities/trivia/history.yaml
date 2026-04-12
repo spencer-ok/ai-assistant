@@ -1,0 +1,58 @@
+# History Trivia
+topic: "History"
+instructions: >
+  You are quizzing the user on American history trivia.
+  Ask ONE question at a time. Wait for their answer.
+  If correct, celebrate and share a bonus fact.
+  If wrong, give a hint. Keep it encouraging.
+
+questions:
+  - q: "Who was the first President of the United States?"
+    a: "George Washington"
+    hint: "He's on the one dollar bill"
+    difficulty: easy
+
+  - q: "What year did the United States declare independence?"
+    a: "1776"
+    hint: "It's in the seventeen hundreds"
+    difficulty: easy
+
+  - q: "Who wrote the Declaration of Independence?"
+    a: "Thomas Jefferson"
+    hint: "He later became the third President"
+    difficulty: easy
+
+  - q: "What was the name of the ship the Pilgrims sailed on to America?"
+    a: "The Mayflower"
+    hint: "It's named after a flower that blooms in spring"
+    difficulty: easy
+
+  - q: "Which President freed the slaves?"
+    a: "Abraham Lincoln"
+    hint: "He wore a tall top hat and had a beard"
+    difficulty: easy
+
+  - q: "What year did World War II end?"
+    a: "1945"
+    hint: "It's in the nineteen forties"
+    difficulty: medium
+
+  - q: "Who was the first man to walk on the moon?"
+    a: "Neil Armstrong"
+    hint: "His last name has the word 'strong' in it"
+    difficulty: easy
+
+  - q: "What famous speech starts with 'I have a dream'?"
+    a: "Martin Luther King Jr.'s speech at the March on Washington"
+    hint: "It was given by a famous civil rights leader"
+    difficulty: easy
+
+  - q: "How many original colonies were there?"
+    a: "Thirteen"
+    hint: "Count the stripes on the American flag"
+    difficulty: easy
+
+  - q: "What is the oldest city in the United States?"
+    a: "St. Augustine, Florida"
+    hint: "It's in Florida and was founded by the Spanish"
+    difficulty: hard

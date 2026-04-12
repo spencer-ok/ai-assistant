@@ -196,6 +196,27 @@ def reactive_loop():
                 print(f"[{_ts()}][NOTE] {text_input}")
             if _is_exit(text_input):
                 _shutdown()
+            # Check activity triggers for text input too
+            from activities import check_trigger, check_trivia_selection, is_selecting, is_active
+            if is_selecting():
+                resp = check_trivia_selection(text_input)
+                if resp:
+                    print(f"[{_ts()}][ACTIVITY] {resp}")
+                    set_status("speaking", resp)
+                    add_transcript("rosie", resp)
+                    voice.speak(resp, stop_check=lambda: _stop_flag.is_set())
+                    if is_active():
+                        _speak_streaming("Ask me the first trivia question.", initiated_by="user")
+                    set_status("idle")
+                    continue
+            trigger_resp = check_trigger(text_input)
+            if trigger_resp:
+                print(f"[{_ts()}][ACTIVITY] {trigger_resp}")
+                set_status("speaking", trigger_resp)
+                add_transcript("rosie", trigger_resp)
+                voice.speak(trigger_resp, stop_check=lambda: _stop_flag.is_set())
+                set_status("idle")
+                continue
             _speak_streaming(text_input, initiated_by="system" if is_system else "user")
             continue
 
@@ -213,6 +234,28 @@ def reactive_loop():
             add_transcript("user", user_input)
             if _is_exit(user_input):
                 _shutdown()
+            # Check activity triggers
+            from activities import check_trigger, check_trivia_selection, is_selecting, is_active
+            if is_selecting():
+                resp = check_trivia_selection(user_input)
+                if resp:
+                    print(f"[{_ts()}][ACTIVITY] {resp}")
+                    set_status("speaking", resp)
+                    add_transcript("rosie", resp)
+                    voice.speak(resp, stop_check=lambda: _stop_flag.is_set())
+                    # If trivia just loaded, ask first question immediately
+                    if is_active():
+                        _speak_streaming("Ask me the first trivia question.", initiated_by="user")
+                    set_status("idle")
+                    continue
+            trigger_resp = check_trigger(user_input)
+            if trigger_resp:
+                print(f"[{_ts()}][ACTIVITY] {trigger_resp}")
+                set_status("speaking", trigger_resp)
+                add_transcript("rosie", trigger_resp)
+                voice.speak(trigger_resp, stop_check=lambda: _stop_flag.is_set())
+                set_status("idle")
+                continue
             _speak_streaming(user_input, initiated_by="user")
         else:
             set_status("idle")
