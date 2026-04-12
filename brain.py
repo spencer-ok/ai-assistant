@@ -141,10 +141,14 @@ def ask_streaming(user_message: str, initiated_by: str = "user"):
     buffer = ""
     full_reply = ""
 
-    for line in resp.iter_lines():
+    try:
+      for line in resp.iter_lines():
         if not line:
             continue
-        data = json.loads(line)
+        try:
+            data = json.loads(line)
+        except json.JSONDecodeError:
+            continue
         if data.get("done"):
             break
         token = data.get("message", {}).get("content", "")
@@ -160,6 +164,8 @@ def ask_streaming(user_message: str, initiated_by: str = "user"):
             if sentence:
                 full_reply += sentence + " "
                 yield sentence
+    except Exception as e:
+      print(f"[LLM] Stream error: {e}")
 
     leftover = buffer.strip()
     if leftover:
