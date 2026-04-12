@@ -275,6 +275,7 @@ On the remote machine:
 - [ ] **Mid-sentence barge-in with speaker output** — Wake word detection during TTS works with headphones but not reliably with open speakers. Hardware mic array (ReSpeaker) recommended.
 - [ ] **LLM hallucination** — Small model fabricates facts. Larger model or cloud API would solve this.
 - [ ] **Better mic hardware** — ReSpeaker USB mic array or similar for reliable voice pickup
+- [ ] **Cloud LLM option** — Together AI API (~$0.50-$4/month) for deployments without a local GPU. OpenAI-compatible API, minimal code change.
 - [ ] **Photo frame mode** — Background slideshow from shared cloud folder
 - [ ] **Video calls** — One-click family calling via Jitsi Meet
 
