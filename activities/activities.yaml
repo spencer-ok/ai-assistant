@@ -1,8 +1,19 @@
-# Available activities Rosie can do with the user
+# Unified activity triggers — any of these open the activity menu
+triggers:
+  - "activity"
+  - "play a game"
+  - "let's play"
+  - "trivia"
+  - "quiz me"
+  - "word game"
+  - "guessing game"
+  - "let's do something"
+  - "i'm bored"
+
+# All available activities
 activities:
   - name: "Trivia"
     trigger: ["trivia", "quiz", "quiz me"]
-    description: "Fun trivia questions on different topics"
     categories:
       - name: "TV Shows"
         trigger: ["tv", "tv shows", "television"]
@@ -23,18 +34,21 @@ activities:
             trigger: ["history"]
             file: "trivia/history.yaml"
 
+  - name: "Word Games"
+    trigger: ["word game", "word games", "guessing game", "guess"]
+    categories:
+      - name: "Animal Guessing"
+        trigger: ["animal", "animals"]
+        file: "word_games/animals.yaml"
+      - name: "What Am I?"
+        trigger: ["what am i", "objects", "things", "riddle", "riddles"]
+        file: "word_games/what_am_i.yaml"
+
   - name: "Stories"
     trigger: ["story", "stories", "tell me a story"]
-    description: "Rosie tells a complete story"
 
   - name: "Jokes"
     trigger: ["joke", "jokes", "funny"]
-    description: "Clean, family-friendly jokes"
 
   - name: "Reminiscing"
-    trigger: ["reminisce", "remember", "old days", "when I was young"]
-    description: "Talk about memories and the past"
-
-  - name: "Word Games"
-    trigger: ["word game", "word games", "guessing game"]
-    description: "Simple word and guessing games"
+    trigger: ["reminisce", "remember when", "old days", "memories"]

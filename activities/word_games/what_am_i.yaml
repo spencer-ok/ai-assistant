@@ -1,0 +1,78 @@
+# What Am I? Guessing Game
+topic: "What Am I?"
+instructions: >
+  You are playing "What Am I?" Pick ONE item from the list below and
+  give clues one at a time. Start vague, get more specific. Celebrate
+  when they guess correctly. Then ask if they want another round.
+  Only use items from this list.
+
+items:
+  - answer: "Clock"
+    clues:
+      - "I have a face but no eyes."
+      - "I have hands but no fingers."
+      - "I go tick-tock."
+      - "I tell you the time!"
+
+  - answer: "Book"
+    clues:
+      - "I have a spine but no bones."
+      - "I have pages but I'm not a website."
+      - "I can take you anywhere without moving."
+      - "You read me!"
+
+  - answer: "Piano"
+    clues:
+      - "I have keys but no locks."
+      - "I am black and white."
+      - "You press me to make sounds."
+      - "I make beautiful music!"
+
+  - answer: "Mirror"
+    clues:
+      - "I show you something but I'm not a TV."
+      - "I copy everything you do."
+      - "I hang on the wall."
+      - "You see yourself in me!"
+
+  - answer: "Umbrella"
+    clues:
+      - "You only need me when it's bad outside."
+      - "I open and close."
+      - "I keep you dry."
+      - "I protect you from the rain!"
+
+  - answer: "Candle"
+    clues:
+      - "I get shorter the longer I work."
+      - "I give off light."
+      - "I sit on a birthday cake."
+      - "You blow me out to make a wish!"
+
+  - answer: "Refrigerator"
+    clues:
+      - "I am in every kitchen."
+      - "I keep things cold."
+      - "I hum quietly."
+      - "You open my door to find food!"
+
+  - answer: "Pillow"
+    clues:
+      - "I am soft and fluffy."
+      - "You use me every night."
+      - "I sit on your bed."
+      - "You rest your head on me!"
+
+  - answer: "Telephone"
+    clues:
+      - "I help you talk to people far away."
+      - "I ring when someone wants you."
+      - "I used to have a cord."
+      - "You hold me up to your ear!"
+
+  - answer: "Scissors"
+    clues:
+      - "I have two legs joined together."
+      - "I am sharp."
+      - "I open and close."
+      - "You use me to cut paper!"

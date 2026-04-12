@@ -1,0 +1,79 @@
+# Animal Guessing Game
+topic: "Animal Guessing"
+instructions: >
+  You are playing a guessing game. Pick ONE animal from the list below
+  and give clues one at a time. Start with a vague clue, then get more
+  specific if the user guesses wrong. Celebrate when they get it right.
+  Then ask if they want to try another animal. Only use animals from
+  this list — do NOT make up your own.
+
+items:
+  - answer: "Elephant"
+    clues:
+      - "I am very big and gray."
+      - "I have a long nose called a trunk."
+      - "I live in Africa and Asia."
+      - "I never forget!"
+
+  - answer: "Cat"
+    clues:
+      - "I am a popular pet."
+      - "I like to purr when I'm happy."
+      - "I chase mice."
+      - "I have nine lives!"
+
+  - answer: "Eagle"
+    clues:
+      - "I can fly very high."
+      - "I am a symbol of America."
+      - "I have very sharp eyes."
+      - "I am a bird of prey with a white head."
+
+  - answer: "Turtle"
+    clues:
+      - "I move very slowly."
+      - "I carry my house on my back."
+      - "I can live for over 100 years."
+      - "I won the race against the hare!"
+
+  - answer: "Dog"
+    clues:
+      - "I am man's best friend."
+      - "I love to fetch and play."
+      - "I wag my tail when I'm happy."
+      - "I come in all shapes and sizes — from tiny to huge!"
+
+  - answer: "Penguin"
+    clues:
+      - "I am a bird but I cannot fly."
+      - "I love cold weather."
+      - "I waddle when I walk."
+      - "I wear a natural tuxedo — black and white!"
+
+  - answer: "Horse"
+    clues:
+      - "People ride on my back."
+      - "I eat hay and oats."
+      - "I can run very fast."
+      - "Cowboys love me!"
+
+  - answer: "Owl"
+    clues:
+      - "I come out at night."
+      - "I can turn my head almost all the way around."
+      - "I am very wise."
+      - "I say 'who who' in the dark!"
+
+  - answer: "Dolphin"
+    clues:
+      - "I live in the ocean but I'm not a fish."
+      - "I am very smart and playful."
+      - "I jump out of the water for fun."
+      - "I talk to my friends using clicks and whistles."
+
+  - answer: "Butterfly"
+    clues:
+      - "I start life as a caterpillar."
+      - "I have beautiful colorful wings."
+      - "I drink nectar from flowers."
+      - "I go through a metamorphosis!"
