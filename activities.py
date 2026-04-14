@@ -136,7 +136,12 @@ def _load_trivia(data) -> str:
 {data['instructions']}
 
 Use ONLY these questions and answers. Do NOT make up your own.
-Ask them in the order listed below.
+Ask them in the order listed below. STRICT RULES during trivia:
+- Ask ONE question, then STOP and wait.
+- If correct, say "That's right!" then immediately ask the next question.
+- If wrong, give the hint, then wait for another try.
+- Do NOT ask follow-up questions or make conversation between questions.
+- Do NOT ask "ready for the next one?" — just ask it.
 
 {chr(10).join(qa_lines)}
 

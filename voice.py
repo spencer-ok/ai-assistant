@@ -193,7 +193,7 @@ def _transcribe(audio: np.ndarray) -> str | None:
     return text if text else None
 
 
-_recalibrate_interval = 30  # seconds
+_recalibrate_interval = 60  # seconds
 _last_recalibrate = time.time()
 
 
@@ -210,7 +210,7 @@ def _maybe_recalibrate():
     levels = [np.sqrt(np.mean(c.astype(np.float32) ** 2)) for c in recent]
     # Only recalibrate if it looks quiet (no speech in recent chunks)
     median = np.median(levels)
-    if median < _SILENCE_THRESH:  # only adjust down or from quiet baseline
+    if median < _SILENCE_THRESH * 0.5:  # only adjust from truly quiet baseline
         new_thresh = min(max(median * 3, 30), 500)
         if abs(new_thresh - _SILENCE_THRESH) > 10:
             print(f"[{_ts()}][CAL] Recalibrated: {_SILENCE_THRESH:.0f} -> {new_thresh:.0f}")
@@ -220,8 +220,14 @@ def _maybe_recalibrate():
 def listen(text_pending_check=None) -> str | None:
     """Wait for speech, record until silence, transcribe.
     Returns None immediately if text_pending_check() returns True."""
-    print(f"[{_ts()}][MIC] Listening...")
+    # Flush stale audio from mic buffer to avoid echo bleed
     _speech_event.clear()
+    import time as _t
+    _t.sleep(0.5)
+    with _mic_lock:
+        _mic_buffer.clear()
+    _speech_event.clear()
+    print(f"[{_ts()}][MIC] Listening...")
 
     # Wait for speech, but bail out if text input arrives or mic is muted
     while not _speech_event.wait(timeout=0.3):
