@@ -6,3 +6,4 @@ schedule
 sounddevice
 numpy
 flask
+openwakeword==0.6.0

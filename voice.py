@@ -16,7 +16,6 @@ with open("config.yaml") as f:
 
 _whisper_model = whisper.load_model(_cfg["whisper_model"])
 _whisper_lock = threading.Lock()
-_whisper_wake = whisper.load_model("tiny")  # fast model for wake word detection only
 _piper_voice = PiperVoice.load(_cfg["piper_model"])
 _SILENCE_DUR = _cfg["silence_duration"]
 _DUPLEX = _cfg.get("duplex", False)
@@ -26,6 +25,20 @@ _CHUNK_SAMPLES = int(_SAMPLE_RATE * _CHUNK_SEC)
 _INPUT_DEV = _cfg.get("input_device", None)
 _OUTPUT_DEV = _cfg.get("output_device", None)
 _DEBUG_MIC = _cfg.get("debug_mic", None)  # secondary mic for ground truth recording
+
+# Listen modes: "always", "name", "muted"
+_listen_mode = _cfg.get("listen_mode", "always")
+_listen_lock = threading.Lock()
+
+# Wake word conversation window
+_WAKE_TIMEOUT = 30  # seconds of silence before returning to wake word mode
+_wake_active_until = 0  # timestamp when conversation window expires
+
+# OpenWakeWord for name-activated mode
+from openwakeword.model import Model as _OWWModel
+_oww_model = _OWWModel(wakeword_models=["hey_jarvis_v0.1"], inference_framework="onnx")
+_oww_threshold = 0.5
+_wake_detected = threading.Event()
 
 # AEC — longer filter for TV/HDMI delay (16k * 0.3s = 4800 samples across blocks)
 _ECHO_DELAY = _cfg.get("echo_delay", 0)
@@ -73,7 +86,24 @@ def _mic_callback(indata, frames, time_info, status):
         _mic_buffer.append((_chunk_counter, chunk))
         _chunk_counter += 1
 
-    # For speech detection during playback, use AEC-cleaned RMS
+    # In name-activated mode, feed OpenWakeWord instead of RMS detection
+    if _listen_mode == "name" and time.time() > _wake_active_until:
+        # OWW expects int16 numpy array
+        prediction = _oww_model.predict(chunk)
+        for mdl in _oww_model.prediction_buffer.keys():
+            scores = list(_oww_model.prediction_buffer[mdl])
+            if scores and scores[-1] > _oww_threshold:
+                _wake_detected.set()
+                _speech_event.set()
+                _oww_model.reset()
+                return
+        return
+
+    # In muted mode, just buffer (for caregiver recording) but don't detect
+    if _listen_mode == "muted":
+        return
+
+    # Always-listening mode (or name mode after wake detected): RMS-based detection
     if _aec is not None and _is_speaking.is_set():
         with _playback_lock:
             ref_samples = list(_playback_ring)
@@ -220,24 +250,43 @@ def _maybe_recalibrate():
 def listen(text_pending_check=None) -> str | None:
     """Wait for speech, record until silence, transcribe.
     Returns None immediately if text_pending_check() returns True."""
+    global _wake_active_until
+    if _listen_mode == "muted":
+        import time as _t
+        _t.sleep(0.3)
+        return None
+
     # Flush stale audio from mic buffer to avoid echo bleed
     _speech_event.clear()
+    _oww_model.reset()
     import time as _t
     _t.sleep(0.5)
     with _mic_lock:
         _mic_buffer.clear()
     _speech_event.clear()
-    print(f"[{_ts()}][MIC] Listening...")
+
+    # In name mode: check if conversation window is still active
+    in_conversation = _listen_mode == "name" and time.time() < _wake_active_until
+    if _listen_mode == "name" and not in_conversation:
+        _wake_detected.clear()
+        print(f"[{_ts()}][MIC] Waiting for wake word...")
+    else:
+        print(f"[{_ts()}][MIC] Listening...")
 
     # Wait for speech, but bail out if text input arrives or mic is muted
     while not _speech_event.wait(timeout=0.3):
         if text_pending_check and text_pending_check():
             return None
-        _maybe_recalibrate()
+        if _listen_mode == "always":
+            _maybe_recalibrate()
+
+    if _wake_detected.is_set() and not in_conversation:
+        print(f"[{_ts()}][WAKE] Wake word detected!")
+        _wake_active_until = time.time() + _WAKE_TIMEOUT
 
     # Check if we got muted while waiting
     from ui.app import is_mic_muted
-    if is_mic_muted():
+    if is_mic_muted() or _listen_mode == "muted":
         _speech_event.clear()
         return None
 
@@ -249,6 +298,10 @@ def listen(text_pending_check=None) -> str | None:
     if is_mic_muted():
         return None
     text = _transcribe(audio)
+
+    # Keep conversation window open after each utterance
+    if text and _listen_mode == "name":
+        _wake_active_until = time.time() + _WAKE_TIMEOUT
 
     # Also transcribe debug mic for comparison
     if _DEBUG_MIC is not None and text:
@@ -429,3 +482,15 @@ def interrupt():
 
 def is_speaking() -> bool:
     return _is_speaking.is_set()
+
+
+def get_listen_mode() -> str:
+    return _listen_mode
+
+def set_listen_mode(mode: str):
+    global _listen_mode
+    if mode in ("always", "name", "muted"):
+        _listen_mode = mode
+        _speech_event.clear()
+        _wake_detected.clear()
+        _oww_model.reset()

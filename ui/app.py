@@ -65,7 +65,8 @@ def should_stop():
 
 
 def is_mic_muted():
-    return _mic_muted.is_set()
+    import voice
+    return voice.get_listen_mode() == "muted"
 
 
 def get_unread_notes() -> list[dict]:
@@ -124,9 +125,11 @@ def themes():
 
 @app.route("/state")
 def state():
+    import voice
     with _state_lock:
         s = dict(_state)
-        s["mic_muted"] = _mic_muted.is_set()
+        s["listen_mode"] = voice.get_listen_mode()
+        s["mic_muted"] = voice.get_listen_mode() == "muted"
         return jsonify(s)
 
 
@@ -152,16 +155,16 @@ def shutdown():
 
 @app.route("/mute", methods=["POST"])
 def mute():
-    if _mic_muted.is_set():
-        _mic_muted.clear()
-        # Clear stale audio from buffer
-        import voice
-        voice._speech_event.clear()
-        with voice._mic_lock:
-            voice._mic_buffer.clear()
+    import voice
+    mode = request.json.get("mode") if request.is_json else None
+    if mode:
+        voice.set_listen_mode(mode)
     else:
-        _mic_muted.set()
-    return jsonify({"muted": _mic_muted.is_set()})
+        # Cycle: always -> name -> muted -> always
+        cur = voice.get_listen_mode()
+        nxt = {"always": "name", "name": "muted", "muted": "always"}[cur]
+        voice.set_listen_mode(nxt)
+    return jsonify({"listen_mode": voice.get_listen_mode()})
 
 
 @app.route("/caregivers")

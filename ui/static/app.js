@@ -15,8 +15,11 @@ function poll() {
     if (emojiEl) emojiEl.textContent = STATUS_EMOJI[s.status] || '';
     speechEl.textContent = s.current_speech;
     const mb = document.getElementById('mutebtn');
-    if (s.mic_muted) { mb.classList.add('muted'); mb.innerHTML = '&#x1F507;'; mb.title = 'Mic OFF'; }
-    else { mb.classList.remove('muted'); mb.innerHTML = '&#x1F3A4;'; mb.title = 'Mic ON'; }
+    const mode = s.listen_mode || 'always';
+    mb.classList.remove('muted', 'wake');
+    if (mode === 'muted') { mb.classList.add('muted'); mb.innerHTML = '&#x1F507;'; mb.title = 'Muted — click for Always On'; }
+    else if (mode === 'name') { mb.classList.add('wake'); mb.innerHTML = '&#x1F4AC;'; mb.title = 'Name Activated — click for Muted'; }
+    else { mb.innerHTML = '&#x1F3A4;'; mb.title = 'Always Listening — click for Name Activated'; }
     if (s.transcript.length !== lastLen) {
       transcriptEl.innerHTML = s.transcript.map(m =>
         `<div class="msg ${m.role}"><span class="label">${m.role === 'user' ? 'You' : 'Rosie'}:</span> ${m.text}</div>`
