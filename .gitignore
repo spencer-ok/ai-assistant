@@ -10,8 +10,12 @@ rosie.log
 memory.json
 .env
 
-# Models (large binary files)
-models/
+# Models (large binary files — keep rosie.onnx)
+models/en_US*
+models/*.json
+
+# Training environment (large datasets, keep locally)
+train_wakeword/
 
 # OS
 .DS_Store

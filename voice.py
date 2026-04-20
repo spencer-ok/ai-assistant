@@ -36,7 +36,7 @@ _wake_active_until = 0  # timestamp when conversation window expires
 
 # OpenWakeWord for name-activated mode
 from openwakeword.model import Model as _OWWModel
-_oww_model = _OWWModel(wakeword_models=["hey_jarvis_v0.1"], inference_framework="onnx")
+_oww_model = _OWWModel(wakeword_models=["models/rosie.onnx"], inference_framework="onnx")
 _oww_threshold = 0.5
 _wake_detected = threading.Event()
 
