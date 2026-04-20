@@ -15,7 +15,14 @@ models/en_US*
 models/*.json
 
 # Training environment (large datasets, keep locally)
-train_wakeword/
+train_wakeword/venv/
+train_wakeword/*.npy
+train_wakeword/openwakeword/
+train_wakeword/piper-sample-generator/
+train_wakeword/my_custom_model/
+train_wakeword/mit_rirs/
+train_wakeword/fma/
+train_wakeword/audioset*/
 
 # OS
 .DS_Store
