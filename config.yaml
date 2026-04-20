@@ -65,7 +65,7 @@ voice:
   whisper_model: "base"
   silence_duration: 1.3
   duplex: false
-  listen_mode: "always"  # always, name, muted
+  listen_mode: "name"  # always, name, muted
   input_device: 3
   echo_delay: 0
   output_device: 6

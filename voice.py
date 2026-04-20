@@ -279,6 +279,9 @@ def listen(text_pending_check=None) -> str | None:
             return None
         if _listen_mode == "always":
             _maybe_recalibrate()
+        # If conversation window just expired, restart listen cycle in wake mode
+        if _listen_mode == "name" and in_conversation and time.time() > _wake_active_until:
+            return None
 
     if _wake_detected.is_set() and not in_conversation:
         print(f"[{_ts()}][WAKE] Wake word detected!")

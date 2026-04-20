@@ -5,9 +5,9 @@ target_phrase:
 
 custom_negative_phrases: []
 
-n_samples: 3000
-n_samples_val: 500
-tts_batch_size: 50
+n_samples: 10000
+n_samples_val: 2000
+tts_batch_size: 16
 augmentation_batch_size: 16
 augmentation_rounds: 1
 
@@ -36,6 +36,6 @@ batch_n_per_class:
 model_type: "dnn"
 layer_size: 32
 
-steps: 15000
+steps: 50000
 max_negative_weight: 1500
 target_false_positives_per_hour: 0.2
