@@ -243,11 +243,18 @@ On the remote machine:
 
 | Layer | Tool | Role |
 |---|---|---|
-| LLM | [Ollama](https://ollama.com/) (gemma2:9b) | Conversation logic |
+| LLM | [Together AI](https://together.ai/) / [Ollama](https://ollama.com/) | Conversation logic |
 | Speech-to-Text | [OpenAI Whisper](https://github.com/openai/whisper) | Voice input |
 | Text-to-Speech | [Piper](https://github.com/rhasspy/piper) | Natural voice output |
+| Wake Word | [OpenWakeWord](https://github.com/dscripka/openwakeword) | Name-activated listening |
 | UI | Flask | Web-based robot face and controls |
 | Automation | Schedule library | Proactive check-ins |
+
+## Wake Word Training
+
+Rosie uses a custom-trained OpenWakeWord model for name-activated listening. The model was trained on synthetic TTS samples and can be retrained with real voice recordings for better accuracy.
+
+See [`train_wakeword/README.md`](train_wakeword/README.md) for training instructions.
 
 ## Development Phases
 
