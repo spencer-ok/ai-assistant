@@ -22,7 +22,10 @@ train_wakeword/piper-sample-generator/
 train_wakeword/my_custom_model/
 train_wakeword/mit_rirs/
 train_wakeword/fma/
-train_wakeword/audioset*/
+train_wakeword/audioset*
+train_wakeword/real_samples/
+train_wakeword/rosie_*.onnx
+train_wakeword/generate_multivoice.py/
 
 # OS
 .DS_Store

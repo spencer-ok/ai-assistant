@@ -36,9 +36,17 @@ _wake_active_until = 0  # timestamp when conversation window expires
 
 # OpenWakeWord for name-activated mode
 from openwakeword.model import Model as _OWWModel
-_oww_model = _OWWModel(wakeword_models=["models/rosie.onnx"], inference_framework="onnx")
-_oww_threshold = 0.5
+_wakeword_model_name = _cfg.get("wakeword_model", "hey_jarvis_v0.1")
+_oww_model = _OWWModel(wakeword_models=[_wakeword_model_name], inference_framework="onnx")
+_oww_threshold = _cfg.get("wakeword_threshold", 0.5)
 _wake_detected = threading.Event()
+
+# Silero VAD for speech detection (replaces RMS-based silence detection)
+import torch
+torch.set_num_threads(1)
+from silero_vad import load_silero_vad
+_vad_model = load_silero_vad(onnx=True)
+_VAD_THRESHOLD = 0.4
 
 # AEC — longer filter for TV/HDMI delay (16k * 0.3s = 4800 samples across blocks)
 _ECHO_DELAY = _cfg.get("echo_delay", 0)
@@ -103,22 +111,14 @@ def _mic_callback(indata, frames, time_info, status):
     if _listen_mode == "muted":
         return
 
-    # Always-listening mode (or name mode after wake detected): RMS-based detection
-    if _aec is not None and _is_speaking.is_set():
-        with _playback_lock:
-            ref_samples = list(_playback_ring)
-        offset = len(ref_samples) - len(chunk) - _ECHO_DELAY
-        if offset >= 0:
-            ref = np.array(ref_samples[offset:offset + len(chunk)], dtype=np.int16)
-            cleaned = _aec.process_chunk(chunk, ref)
-            rms = np.sqrt(np.mean(cleaned ** 2)) * 32768.0
-        else:
-            rms = np.sqrt(np.mean(chunk.astype(np.float32) ** 2))
-    else:
-        rms = np.sqrt(np.mean(chunk.astype(np.float32) ** 2))
-
-    if rms >= _SILENCE_THRESH:
-        _speech_event.set()
+    # Always-listening mode (or name mode after wake detected): Silero VAD detection
+    # Sample 3 windows across the chunk to catch speech anywhere in it
+    audio_float = chunk.astype(np.float32) / 32768.0
+    for offset in (0, len(audio_float) // 2 - 256, len(audio_float) - 512):
+        speech_prob = _vad_model(torch.from_numpy(audio_float[offset:offset+512]), _SAMPLE_RATE).item()
+        if speech_prob >= _VAD_THRESHOLD:
+            _speech_event.set()
+            break
 
 
 _mic_stream = sd.InputStream(
@@ -151,16 +151,7 @@ if _DEBUG_MIC is not None:
 
 
 def calibrate():
-    global _SILENCE_THRESH
-    print(f"[{_ts()}][CAL] Calibrating mic - stay quiet...")
-    time.sleep(2)
-    with _mic_lock:
-        recent = [chunk for _, chunk in list(_mic_buffer)[-4:]]
-    if recent:
-        levels = [np.sqrt(np.mean(c.astype(np.float32) ** 2)) for c in recent]
-        ambient = max(np.median(levels), 10)
-        _SILENCE_THRESH = min(ambient * 3, 500)
-    print(f"[{_ts()}][CAL] Threshold: {_SILENCE_THRESH:.0f}")
+    print(f"[{_ts()}][VAD] Silero VAD active (threshold: {_VAD_THRESHOLD})")
 
 
 calibrate()
@@ -192,8 +183,14 @@ def _drain_speech() -> np.ndarray | None:
 
         for idx, chunk in new_chunks:
             last_seen = idx
-            rms = np.sqrt(np.mean(chunk.astype(np.float32) ** 2))
-            if rms < _SILENCE_THRESH:
+            audio_float = chunk.astype(np.float32) / 32768.0
+            is_speech = False
+            for offset in (0, len(audio_float) // 2 - 256, len(audio_float) - 512):
+                speech_prob = _vad_model(torch.from_numpy(audio_float[offset:offset+512]), _SAMPLE_RATE).item()
+                if speech_prob >= _VAD_THRESHOLD:
+                    is_speech = True
+                    break
+            if not is_speech:
                 silent_chunks += 1
                 if silent_chunks >= max_silent:
                     print(f"[{_ts()}][MIC] Silence detected, {len(chunks)} chunks total")
@@ -227,26 +224,6 @@ _recalibrate_interval = 60  # seconds
 _last_recalibrate = time.time()
 
 
-def _maybe_recalibrate():
-    """Periodically update threshold from recent quiet chunks."""
-    global _SILENCE_THRESH, _last_recalibrate
-    if time.time() - _last_recalibrate < _recalibrate_interval:
-        return
-    _last_recalibrate = time.time()
-    with _mic_lock:
-        recent = [c for _, c in list(_mic_buffer)[-8:]]
-    if not recent:
-        return
-    levels = [np.sqrt(np.mean(c.astype(np.float32) ** 2)) for c in recent]
-    # Only recalibrate if it looks quiet (no speech in recent chunks)
-    median = np.median(levels)
-    if median < _SILENCE_THRESH * 0.5:  # only adjust from truly quiet baseline
-        new_thresh = min(max(median * 3, 30), 500)
-        if abs(new_thresh - _SILENCE_THRESH) > 10:
-            print(f"[{_ts()}][CAL] Recalibrated: {_SILENCE_THRESH:.0f} -> {new_thresh:.0f}")
-            _SILENCE_THRESH = new_thresh
-
-
 def listen(text_pending_check=None) -> str | None:
     """Wait for speech, record until silence, transcribe.
     Returns None immediately if text_pending_check() returns True."""
@@ -277,8 +254,6 @@ def listen(text_pending_check=None) -> str | None:
     while not _speech_event.wait(timeout=0.3):
         if text_pending_check and text_pending_check():
             return None
-        if _listen_mode == "always":
-            _maybe_recalibrate()
         # If conversation window just expired, restart listen cycle in wake mode
         if _listen_mode == "name" and in_conversation and time.time() > _wake_active_until:
             return None
