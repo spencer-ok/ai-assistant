@@ -62,15 +62,29 @@ def _build_system_prompt() -> str:
         p = _user_profile
         profile_lines = [f"The person you are talking to is {p['name']} ({p['pronouns']})."]
         if p.get('age'):
-            profile_lines.append(f"{p['name']} is {p['age']} years old.")
+            profile_lines.append(f"{p.get('nickname', p['name'])} is {p['age']} years old.")
+        if p.get('location'):
+            profile_lines.append(f"Lives in {p['location']}.")
         if p.get('hobbies'):
             profile_lines.append(f"Hobbies: {', '.join(p['hobbies'])}.")
         if p.get('health_notes'):
             profile_lines.append(f"Health: {p['health_notes']}")
+        if p.get('personality'):
+            profile_lines.append(f"Personality: {p['personality']}")
         favs = p.get('favorites', {})
         fav_parts = [f"{k}: {v}" for k, v in favs.items() if v]
         if fav_parts:
             profile_lines.append(f"Favorites: {', '.join(fav_parts)}.")
+        # Family members
+        for fm in p.get('family', []):
+            line = f"{fm['name']} is her {fm['relationship']}"
+            if fm.get('spouse'):
+                line += f", married to {fm['spouse']}"
+            if fm.get('location'):
+                line += f", lives in {fm['location']}"
+            if fm.get('notes'):
+                line += f" ({fm['notes']})"
+            profile_lines.append(line + ".")
         if p.get('notes'):
             profile_lines.append(p['notes'])
         profile_lines.append(f"Always call the user {p.get('nickname', p['name'])}. Never call them Rosie.")

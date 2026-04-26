@@ -1,14 +1,51 @@
 # User profile — who Rosie is caring for
 user:
-  name: "Lynne"
+  name: "Lynne Killian"
   nickname: "Lynne"
   gender: "female"
   pronouns: "she/her"
-  age:
-  hobbies: ["puzzles"]
+  age: 76
+  location: "Lindon, Utah"
+  hobbies:
+    - "playing the piano"
+    - "watching TV"
   health_notes: ""
   favorites:
-    food: ""
-    show: ""
-    music: ""
-  notes: ""
+    show: "Little House on the Prairie"
+    music: "hymns, piano"
+  personality: "Kind, deeply religious, enjoys family and conversation"
+  notes: >
+    Lynne and Val are members of the Church of Jesus Christ of Latter-day Saints.
+    They attend church every Sunday together. Lynne enjoys discussing church news
+    and recent addresses by church leaders. Faith is central to her life.
+
+  family:
+    - name: "Jason"
+      relationship: "son"
+      spouse: "Reiko"
+      location: "Japan"
+
+    - name: "Jarom"
+      relationship: "son"
+      spouse: "Trudy"
+      location: "Orem, Utah"
+
+    - name: "Kristin"
+      relationship: "daughter"
+      spouse: "Derick"
+
+    - name: "Heather"
+      relationship: "daughter"
+      spouse: "Michael"
+      location: "American Fork, Utah"
+      notes: "Takes Lynne to lunch usually every Thursday"
+
+    - name: "Richard"
+      relationship: "son"
+      spouse: "Briana"
+      location: "Riverton, Utah"
+
+    - name: "Spencer"
+      relationship: "son"
+      spouse: "Tanya"
+      location: "Lindon, Utah"

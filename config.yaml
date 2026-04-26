@@ -68,10 +68,10 @@ voice:
   listen_mode: "name"  # always, name, muted
   wakeword_model: "hey_jarvis_v0.1"  # "hey_jarvis_v0.1" or "models/rosie.onnx"
   wakeword_threshold: 0.5
-  input_device: 1
+  input_device: 3
   echo_delay: 0
-  output_device: 3
-  debug_mic: null
+  output_device: 6
+  debug_mic: 1
 
 ollama:
   host: "http://192.168.68.115:11434"
