@@ -100,6 +100,30 @@ try:
 except FileNotFoundError:
     pass
 
+# Church News headlines
+_church_news = []
+try:
+    with open("church/news.json") as _nf:
+        _news_data = json.load(_nf)
+        _church_news = _news_data.get("headlines", [])
+except (FileNotFoundError, json.JSONDecodeError):
+    pass
+
+_NEWS_KEYWORDS = {"news", "church news", "what's new", "what's happening", "latest",
+                  "anything new", "what's going on"}
+
+
+def _church_news_text() -> str:
+    """Build a text summary of recent Church News headlines."""
+    if not _church_news:
+        return ""
+    lines = ["Recent Church News headlines:"]
+    for h in _church_news:
+        title = h.get("title", "")
+        if title and len(title) > 15:  # skip category-only entries
+            lines.append(f"- {title}")
+    return "\n".join(lines)
+
 
 def _find_talk_for_message(msg: str) -> str | None:
     """If the user mentions a specific speaker, load their talk text."""
@@ -278,6 +302,17 @@ def ask_streaming(user_message: str, initiated_by: str = "user"):
                     f"The user is asking about a specific conference talk. Here it is:\n{talk_text}\n"
                     "Discuss this talk naturally. Share key points and stories from it. "
                     "Don't read it word for word — summarize and discuss like a friend would."})
+            # Check for church news request
+            elif any(kw in msg_lower for kw in _NEWS_KEYWORDS) and _church_news:
+                news_text = _church_news_text()
+                messages.insert(1, {"role": "system", "content":
+                    f"The user is asking about church news. Here are recent headlines:\n{news_text}\n"
+                    "Share a few interesting headlines naturally. Don't list them all — "
+                    "pick 2-3 that would interest an older Latter-day Saint woman.\n"
+                    "IMPORTANT: You ONLY know the headlines, not the article details. "
+                    "If the user asks for more detail about a headline, say you only saw "
+                    "the headline and suggest they ask a family member or check the Church News "
+                    "website for the full story. NEVER make up details about a news story."})
             else:
                 ctx = _church_context_text()
                 if ctx:
