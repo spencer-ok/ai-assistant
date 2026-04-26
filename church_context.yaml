@@ -1,0 +1,106 @@
+# Church of Jesus Christ of Latter-day Saints — Context for Rosie
+# Updated: April 2026
+
+current_leadership:
+  prophet: "President Dallin H. Oaks"
+  first_counselor: "President Henry B. Eyring"
+  second_counselor: "President D. Todd Christofferson"
+  notes: >
+    President Russell M. Nelson passed away on September 27, 2025 at age 101.
+    President Oaks was sustained as the new President of the Church on October 14, 2025.
+    A solemn assembly was held at the April 2026 General Conference to formally sustain
+    the new First Presidency.
+
+april_2026_conference:
+  date: "April 4-5, 2026 (Easter weekend)"
+  description: "196th Annual General Conference, held at the Conference Center in Salt Lake City"
+  highlights:
+    - "Solemn assembly to sustain President Oaks and the new First Presidency"
+    - "Eight new General Authority Seventies sustained"
+    - "New Primary general presidency sustained (begins August 1)"
+    - "12 singers from 10 countries joined the Tabernacle Choir as global members"
+
+  key_talks:
+    - speaker: "President Dallin H. Oaks"
+      title: "Alive in Christ"
+      summary: >
+        Spoke on Easter Sunday about the Resurrection as a pillar of faith.
+        Invited all to be peacemakers. Said: "As followers of Christ, let us follow
+        Him by forgoing contention and by using the language and methods of peacemakers.
+        In our families and other personal relationships, let us avoid what is harsh
+        and hateful."
+
+    - speaker: "President Henry B. Eyring"
+      title: "Prayers for Peace"
+      summary: >
+        Testified of the Savior's promised peace through fervent prayer.
+
+    - speaker: "President Dieter F. Uchtdorf"
+      title: "Encounter at the Empty Tomb"
+      summary: >
+        Taught that we must encounter the empty tomb — reflecting on the reality
+        and meaning of Christ's Resurrection.
+
+    - speaker: "President Emily Belle Freeman"
+      title: "Best Days and Worst Days"
+      summary: >
+        Spoke about finding the Savior in both our best and worst days.
+
+    - speaker: "President D. Todd Christofferson"
+      title: "The Character of Christ"
+      summary: >
+        Invited members to acquire the character of Christ in their daily lives.
+
+    - speaker: "Elder Patrick Kearon"
+      title: "About His Business"
+      summary: >
+        Encouraged members to be about the Lord's business in their daily lives.
+
+    - speaker: "Elder David A. Bednar"
+      title: "All Who Have Endured Valiantly"
+      summary: >
+        Spoke about enduring to the end with faith and valiance.
+
+    - speaker: "Elder Ronald A. Rasband"
+      title: "He Is Risen"
+      summary: >
+        Testified of the risen Christ on Easter Sunday.
+
+    - speaker: "Elder Dale G. Renlund"
+      title: "Because of Jesus Christ"
+      summary: >
+        Spoke about the blessings that come because of the Savior's Atonement.
+
+    - speaker: "Elder Neil L. Andersen"
+      title: "Eternal Marriage Is an Eternal Journey"
+      summary: >
+        Emphasized the central role of marriage and families in God's plan.
+
+    - speaker: "Elder Gary E. Stevenson"
+      title: "Lost Luggage, Redeemed Souls"
+      summary: >
+        Used the analogy of lost luggage to teach about redemption through Christ.
+
+    - speaker: "Elder Gérald Caussé"
+      title: "Love All; Love Each"
+      summary: >
+        Taught about loving all of God's children individually.
+
+    - speaker: "Elder Quentin L. Cook"
+      title: "Keys, Covenants and Easter"
+      summary: >
+        Spoke about priesthood keys, sacred covenants, and the meaning of Easter.
+
+    - speaker: "Elder Gerrit W. Gong"
+      title: "'Tis Eastertide: No One Walks Alone"
+      summary: >
+        Testified that because of Christ, no one walks alone.
+
+  themes:
+    - "Being peacemakers in families and relationships"
+    - "The reality and meaning of Christ's Resurrection"
+    - "Acquiring the character of Christ"
+    - "The central role of marriage and families"
+    - "Enduring with faith and valiance"
+    - "Finding the Savior in our best and worst days"
+    - "Loving all of God's children"

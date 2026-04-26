@@ -51,6 +51,46 @@ try:
 except FileNotFoundError:
     pass
 
+# Church context — loaded once, injected when conversation touches on church topics
+_church_context = None
+try:
+    with open("church_context.yaml") as _cf:
+        _church_context = yaml.safe_load(_cf)
+except FileNotFoundError:
+    pass
+
+_CHURCH_KEYWORDS = {"church", "conference", "general conference", "prophet", "elder",
+                    "president oaks", "president nelson", "temple", "hymn", "hymns",
+                    "scripture", "gospel", "faith", "prayer", "blessing", "sacrament",
+                    "sunday", "bishop", "ward", "stake", "missionary", "apostle",
+                    "latter-day", "lds", "heavenly father", "jesus", "christ",
+                    "resurrection", "easter", "priesthood", "relief society"}
+
+
+def _church_context_text() -> str:
+    """Build a text summary of church context for the LLM."""
+    if not _church_context:
+        return ""
+    lines = []
+    cl = _church_context.get("current_leadership", {})
+    if cl:
+        lines.append(f"Current Church President: {cl.get('prophet', 'unknown')}.")
+        lines.append(f"First Counselor: {cl.get('first_counselor')}, Second Counselor: {cl.get('second_counselor')}.")
+        if cl.get("notes"):
+            lines.append(cl["notes"].strip())
+    conf = _church_context.get("april_2026_conference", {})
+    if conf:
+        lines.append(f"\nApril 2026 General Conference ({conf.get('date', '')}):")
+        for h in conf.get("highlights", []):
+            lines.append(f"- {h}")
+        lines.append("\nKey talks:")
+        for talk in conf.get("key_talks", []):
+            lines.append(f"- {talk['speaker']}: \"{talk['title']}\" — {talk['summary'].strip()}")
+        themes = conf.get("themes", [])
+        if themes:
+            lines.append(f"\nMain themes: {'; '.join(themes)}.")
+    return "\n".join(lines)
+
 
 def _build_system_prompt() -> str:
     now = datetime.now()
@@ -201,6 +241,17 @@ def ask_streaming(user_message: str, initiated_by: str = "user"):
 
     trimmed = _history[-20:]
     messages = [{"role": "system", "content": _build_system_prompt()}] + trimmed
+
+    # Inject church context if the user mentions church-related topics
+    if _church_context:
+        msg_lower = user_message.lower()
+        if any(kw in msg_lower for kw in _CHURCH_KEYWORDS):
+            ctx = _church_context_text()
+            if ctx:
+                messages.insert(1, {"role": "system", "content":
+                    f"The user wants to discuss church topics. Here is current context:\n{ctx}\n"
+                    "Use this information naturally in conversation. Don't recite it all at once — "
+                    "share relevant bits as the conversation flows."})
 
     # Try providers in order: Together AI → Ollama primary → Ollama fallback
     token_stream = None
