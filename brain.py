@@ -141,6 +141,47 @@ def _find_talk_for_message(msg: str) -> str | None:
     return None
 
 
+def _fetch_news_article(msg: str) -> str | None:
+    """If the user's message matches a recent headline, fetch the full article."""
+    import urllib.request, html as html_mod
+    msg_lower = msg.lower()
+    # Find best matching headline — check if key words from headline appear in message
+    best = None
+    best_score = 0
+    for h in _church_news:
+        title = h.get("title", "")
+        url = h.get("url", "")
+        if not title or not url or len(title) < 20:
+            continue
+        words = [w.lower() for w in re.split(r'\W+', title) if len(w) > 3]
+        score = sum(1 for w in words if w in msg_lower)
+        if score > best_score and score >= 2:
+            best_score = score
+            best = h
+    if not best:
+        return None
+    try:
+        req = urllib.request.Request(best["url"], headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+        # Extract article text
+        match = re.search(r'<article[^>]*>(.*?)</article>', raw, re.DOTALL)
+        text = match.group(1) if match else raw
+        # Strip HTML
+        text = re.sub(r'<script[^>]*>.*?</script>', '', text, flags=re.DOTALL)
+        text = re.sub(r'<style[^>]*>.*?</style>', '', text, flags=re.DOTALL)
+        text = re.sub(r'<[^>]+>', ' ', text)
+        text = html_mod.unescape(text)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if len(text) > 4000:
+            text = text[:4000] + "..."
+        if len(text) > 200:
+            return f'Article: "{best["title"]}"\n\n{text}'
+    except Exception as e:
+        print(f"[NEWS] Failed to fetch article: {e}")
+    return None
+
+
 def _build_system_prompt() -> str:
     now = datetime.now()
     time_ctx = f"Current date/time: {now.strftime('%A, %B %d, %Y at %I:%M %p')}."
@@ -303,16 +344,24 @@ def ask_streaming(user_message: str, initiated_by: str = "user"):
                     "Discuss this talk naturally. Share key points and stories from it. "
                     "Don't read it word for word — summarize and discuss like a friend would."})
             # Check for church news request
-            elif any(kw in msg_lower for kw in _NEWS_KEYWORDS) and _church_news:
-                news_text = _church_news_text()
-                messages.insert(1, {"role": "system", "content":
-                    f"The user is asking about church news. Here are recent headlines:\n{news_text}\n"
-                    "Share a few interesting headlines naturally. Don't list them all — "
-                    "pick 2-3 that would interest an older Latter-day Saint woman.\n"
-                    "IMPORTANT: You ONLY know the headlines, not the article details. "
-                    "If the user asks for more detail about a headline, say you only saw "
-                    "the headline and suggest they ask a family member or check the Church News "
-                    "website for the full story. NEVER make up details about a news story."})
+            elif _church_news:
+                # First check if user is asking about a specific headline
+                article = _fetch_news_article(user_message)
+                if article:
+                    messages.insert(1, {"role": "system", "content":
+                        f"The user is asking about a church news article. Here is the full article:\n{article}\n"
+                        "Discuss this article naturally. Share key points like a friend would. "
+                        "Don't read it word for word — summarize the main points."})
+                elif any(kw in msg_lower for kw in _NEWS_KEYWORDS):
+                    news_text = _church_news_text()
+                    messages.insert(1, {"role": "system", "content":
+                        f"The user is asking about church news. Here are recent headlines:\n{news_text}\n"
+                        "Share a few interesting headlines naturally. Don't list them all — "
+                        "pick 2-3 that would interest an older Latter-day Saint woman.\n"
+                        "IMPORTANT: You ONLY know the headlines, not the article details. "
+                        "If the user asks for more detail about a headline, say you only saw "
+                        "the headline and suggest they ask a family member or check the Church News "
+                        "website for the full story. NEVER make up details about a news story."})
             else:
                 ctx = _church_context_text()
                 if ctx:
