@@ -92,6 +92,31 @@ def _church_context_text() -> str:
     return "\n".join(lines)
 
 
+# Speaker lookup for on-demand talk loading
+_speakers = {}
+try:
+    with open("church/speakers.yaml") as _sf:
+        _speakers = yaml.safe_load(_sf).get("speakers", {})
+except FileNotFoundError:
+    pass
+
+
+def _find_talk_for_message(msg: str) -> str | None:
+    """If the user mentions a specific speaker, load their talk text."""
+    msg_lower = msg.lower()
+    for key, info in _speakers.items():
+        if key in msg_lower or info["name"].split()[-1].lower() in msg_lower:
+            talk_path = os.path.join("church", "talks", info["file"])
+            if os.path.exists(talk_path):
+                with open(talk_path, encoding="utf-8") as f:
+                    text = f.read()
+                # Truncate to ~4000 chars to fit context window
+                if len(text) > 4000:
+                    text = text[:4000] + "..."
+                return f'{info["name"]} gave a talk called "{info["title"]}".\n\nHere is the content:\n{text}'
+    return None
+
+
 def _build_system_prompt() -> str:
     now = datetime.now()
     time_ctx = f"Current date/time: {now.strftime('%A, %B %d, %Y at %I:%M %p')}."
@@ -246,12 +271,20 @@ def ask_streaming(user_message: str, initiated_by: str = "user"):
     if _church_context:
         msg_lower = user_message.lower()
         if any(kw in msg_lower for kw in _CHURCH_KEYWORDS):
-            ctx = _church_context_text()
-            if ctx:
+            # Check for specific speaker talk first
+            talk_text = _find_talk_for_message(user_message)
+            if talk_text:
                 messages.insert(1, {"role": "system", "content":
-                    f"The user wants to discuss church topics. Here is current context:\n{ctx}\n"
-                    "Use this information naturally in conversation. Don't recite it all at once — "
-                    "share relevant bits as the conversation flows."})
+                    f"The user is asking about a specific conference talk. Here it is:\n{talk_text}\n"
+                    "Discuss this talk naturally. Share key points and stories from it. "
+                    "Don't read it word for word — summarize and discuss like a friend would."})
+            else:
+                ctx = _church_context_text()
+                if ctx:
+                    messages.insert(1, {"role": "system", "content":
+                        f"The user wants to discuss church topics. Here is current context:\n{ctx}\n"
+                        "Use this information naturally in conversation. Don't recite it all at once — "
+                        "share relevant bits as the conversation flows."})
 
     # Try providers in order: Together AI → Ollama primary → Ollama fallback
     token_stream = None

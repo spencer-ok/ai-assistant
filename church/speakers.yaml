@@ -1,0 +1,88 @@
+# Speaker name → talk file mapping for on-demand loading
+# Maps speaker last names and common references to talk filenames
+
+speakers:
+  oaks:
+    file: "oaks-alive-in-christ.txt"
+    name: "President Dallin H. Oaks"
+    title: "Alive in Christ"
+  eyring:
+    file: "eyring-prayers-for-peace.txt"
+    name: "President Henry B. Eyring"
+    title: "Prayers for Peace"
+  uchtdorf:
+    file: "uchtdorf-encounter-empty-tomb.txt"
+    name: "President Dieter F. Uchtdorf"
+    title: "Encounter at the Empty Tomb"
+  freeman:
+    file: "freeman-best-days-worst-days.txt"
+    name: "President Emily Belle Freeman"
+    title: "Best Days and Worst Days"
+  christofferson:
+    file: "christofferson-character-of-christ.txt"
+    name: "President D. Todd Christofferson"
+    title: "The Character of Christ"
+  kearon:
+    file: "kearon-about-his-business.txt"
+    name: "Elder Patrick Kearon"
+    title: "About His Business"
+  bednar:
+    file: "bednar-endured-valiantly.txt"
+    name: "Elder David A. Bednar"
+    title: "All Who Have Endured Valiantly"
+  rasband:
+    file: "rasband-he-is-risen.txt"
+    name: "Elder Ronald A. Rasband"
+    title: "He Is Risen"
+  renlund:
+    file: "renlund-because-of-jesus-christ.txt"
+    name: "Elder Dale G. Renlund"
+    title: "Because of Jesus Christ"
+  andersen:
+    file: "andersen-eternal-marriage.txt"
+    name: "Elder Neil L. Andersen"
+    title: "Eternal Marriage Is an Eternal Journey"
+  stevenson:
+    file: "stevenson-lost-luggage.txt"
+    name: "Elder Gary E. Stevenson"
+    title: "Lost Luggage, Redeemed Souls"
+  causse:
+    file: "causse-love-all-love-each.txt"
+    name: "Elder Gérald Caussé"
+    title: "Love All; Love Each"
+  cook:
+    file: "cook-keys-covenants-easter.txt"
+    name: "Elder Quentin L. Cook"
+    title: "Keys, Covenants, and Easter"
+  gong:
+    file: "gong-eastertide.txt"
+    name: "Elder Gerrit W. Gong"
+    title: "'Tis Eastertide: No One Walks Alone"
+  soares:
+    file: "soares-true-vine.txt"
+    name: "Elder Ulisses Soares"
+    title: "Jesus Christ—the True Vine"
+  yee:
+    file: "yee-ministering.txt"
+    name: "Sister Kristin M. Yee"
+    title: "Ministering"
+  gilbert:
+    file: "gilbert-come-home.txt"
+    name: "Elder Clark G. Gilbert"
+    title: "Come Home"
+  teh:
+    file: "teh-follow-the-prophet.txt"
+    name: "Elder Michael John U. Teh"
+    title: "Follow the Prophet; He Knows the Way"
+  becerra:
+    file: "becerra-tithing.txt"
+    name: "Elder Jorge T. Becerra"
+    title: "Tithing—Putting God First"
+  porter:
+    file: "porter-here-am-i.txt"
+    name: "President Susan H. Porter"
+    title: "Here Am I, Send Me"
+  wong:
+    file: "wong-remember.txt"
+    name: "Elder Chi Hong (Sam) Wong"
+    title: "Remember, Remember"
