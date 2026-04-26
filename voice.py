@@ -451,6 +451,10 @@ def speak(text: str, stop_check=None) -> None:
     out_stream.stop()
     out_stream.close()
     _is_speaking.clear()
+    # Reset conversation window so Lynne has time to respond after Rosie speaks
+    global _wake_active_until
+    if _listen_mode == "name" and _wake_active_until > 0:
+        _wake_active_until = time.time() + _WAKE_TIMEOUT
     print(f"[{_ts()}][TTS] Playback done")
 
 
